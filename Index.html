@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MyPerformance">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>MyPerformance</title>
+<style>
+:root{--ac:#d97757;--acd:#2e211a;--acb:#8a5038;--act:#f3c9b5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Arial,sans-serif;padding-bottom:28px}
+.ic{vertical-align:-3px}
+header{padding:22px 18px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.account-button{background:#171717;color:#fff;border:1px solid #3a3a3a;padding:10px 12px;display:flex;align-items:center;gap:7px;font-size:13px;white-space:nowrap}
+.home-next-card{display:flex;flex-direction:column;gap:8px}
+.home-next-meta{display:flex;flex-wrap:wrap;gap:8px 14px;color:#aaa;font-size:12px}
+.logo{font-size:25px;font-weight:900;letter-spacing:-1px}.logo span,.green{color:var(--ac)}
+.small{font-size:12px;color:#8c8c8c}
+main{padding:10px 16px;max-width:900px;margin:auto}
+h2{font-size:22px;margin:19px 0 13px}h3{font-size:17px}
+.card{background:#171717;border:1px solid #2a2a2a;border-radius:16px;padding:16px;margin-bottom:12px}
+button{border:0;border-radius:10px;padding:12px;font-weight:bold;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.primary{background:var(--ac);color:#000}.secondary{background:#2a2a2a;color:#fff}
+.danger{background:#3a2a2a;color:#ffd6d6}.full{width:100%;margin:8px 0}
+.hidden{display:none!important}
+.back{background:transparent;color:var(--ac);padding:8px 0;margin:3px 0}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.home-tile{min-height:116px;text-align:left;background:#171717;color:#fff;border:1px solid #2a2a2a;border-radius:16px;padding:15px;display:flex;flex-direction:column;justify-content:space-between}
+.home-tile .tile-icon{color:var(--ac);display:block}.home-tile .tile-icon .ic{display:block}.home-tile strong{font-size:16px;margin-top:13px}.home-tile span:last-child{font-size:11px;color:#8c8c8c;margin-top:5px;font-weight:normal}
+.favorite-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.favorite{background:var(--acd);border:1px solid var(--acb);color:var(--act);border-radius:12px;padding:12px 7px;text-align:center;font-size:12px;min-height:58px}
+.favorite.empty-fav{background:#171717;border:1px dashed #4a4a4a;color:#9a9a9a}
+.week-head{display:flex;justify-content:space-between;align-items:center;margin:17px 0}
+.week-head button{background:#2a2a2a;color:#fff;font-size:18px;padding:8px 14px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:18px}
+.day{background:#1a1a1a;color:#aaa;border:1px solid #333;border-radius:11px;padding:9px 2px;text-align:center;min-width:0}
+.day strong{display:block;font-size:15px;margin-top:7px;color:#fff}.day span{font-size:10px}
+.day.selected{background:var(--ac);color:#000;border-color:var(--ac)}.day.selected strong{color:#000}
+.dot{height:5px;width:5px;border-radius:50%;background:var(--ac);margin:7px auto 0}.day.selected .dot{background:#000}
+.agenda-title{display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px;gap:8px}.agenda-title h2{margin:0}
+.session{border-left:3px solid var(--ac)}.session-top{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.tag{font-size:10px;color:var(--ac);background:var(--acd);padding:6px 9px;border-radius:20px}
+.session h3{margin:12px 0 6px}.session p{font-size:13px;color:#aaa;line-height:1.5;white-space:pre-wrap}
+.session-actions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}.session-actions button{font-size:11px;padding:10px}
+.complete{opacity:.7}.complete h3{text-decoration:line-through}
+input,select,textarea{width:100%;padding:12px;margin:7px 0 14px;border-radius:10px;background:#222;color:#fff;border:1px solid #3a3a3a;font-size:15px}
+label{font-size:12px;color:#aeaeae;display:block}
+textarea{resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checkline{display:flex;align-items:center;gap:9px;margin:8px 0 14px;color:#ddd;font-size:13px}
+.checkline input{width:auto;margin:0;accent-color:var(--ac)}
+.empty{text-align:center;padding:26px 10px;color:#8c8c8c;font-size:13px}
+.timer{text-align:center;font-size:42px;padding:20px;font-weight:bold}.actions{display:flex;gap:8px}.actions button{flex:1}
+.section-label{font-size:11px;color:var(--ac);letter-spacing:1px;font-weight:bold;margin:18px 0 9px}
+.status{font-size:11px;padding:6px 9px;border-radius:20px;background:#2a2a2a;color:#c6c6c6}
+.status.done{background:var(--acd);color:var(--act)}.status.missed{background:#3a2a2a;color:#ffd6d6}
+.competition-date{font-size:12px;color:var(--ac)}
+.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{background:#171717;border:1px solid #2a2a2a;border-radius:14px;padding:14px}
+.metric .value{font-size:23px;font-weight:800;color:var(--ac);margin-top:7px}
+.pill-row{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 14px}
+.pill-row button{background:#2a2a2a;color:#ddd;padding:9px 12px;font-size:12px}
+.pill-row button.active{background:var(--ac);color:#000}
+.record-card,.goal-card{border-left:3px solid var(--ac)}
+.goal-done{opacity:.65}.goal-done h3{text-decoration:line-through}
+.timer-mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.timer-mode button{background:#2a2a2a;color:#fff}.timer-mode button.active{background:var(--ac);color:#000}
+.interval-clock{font-size:48px;font-weight:900;text-align:center;padding:15px 0;color:var(--ac)}
+.interval-phase{text-align:center;color:#aaa;font-size:13px;min-height:20px}
+.history-line{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #2a2a2a;font-size:13px}
+@media(max-width:390px){.favorite-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.home-grid{gap:8px}.home-tile{padding:12px}}
+</style>
+</head>
+<body>
+<header><div><div class="logo">MY<span>PERFORMANCE</span></div><div class="small">TON ENTRAÎNEMENT. TA PROGRESSION.</div></div><button class="account-button" onclick="showPage('accountPage')" aria-label="Ouvrir mon compte"><span data-ic="user"></span><span>Mon compte</span></button></header>
+<main>
+<section id="home">
+ <p class="small">TON ESPACE SPORTIF</p><h2>Bonjour, athlète</h2>
+ <div class="card" id="homeNext"></div>
+ <h2>Mes favoris</h2><div class="favorite-grid" id="favoriteShortcuts"></div>
+ <button class="secondary full" onclick="showPage('favoritesPage')">Gérer mes 3 sports favoris</button>
+ <h2>Mon espace</h2>
+ <div class="home-grid">
+  <button class="home-tile" onclick="showPage('planning')"><span class="tile-icon" data-ic="calendar"></span><strong>Planning</strong><span>Organise tes entraînements</span></button>
+  <button class="home-tile" onclick="showPage('timerPage')"><span class="tile-icon" data-ic="timer"></span><strong>Chronomètre</strong><span>Mesure ton temps</span></button>
+  <button class="home-tile" onclick="showPage('history')"><span class="tile-icon" data-ic="chart"></span><strong>Historique</strong><span>Retrouve tes séances</span></button>
+  <button class="home-tile" onclick="showPage('competitions')"><span class="tile-icon" data-ic="trophy"></span><strong>Compétitions</strong><span>Calendrier des événements</span></button>
+  <button class="home-tile" onclick="showPage('recordsPage')"><span class="tile-icon" data-ic="medal"></span><strong>Records personnels</strong><span>Mes réussites et performances</span></button>
+  <button class="home-tile" onclick="showPage('goalsPage')"><span class="tile-icon" data-ic="target"></span><strong>Mes objectifs</strong><span>Mes ambitions à court et long terme</span></button>
+  <button class="home-tile" onclick="showPage('statsPage')"><span class="tile-icon" data-ic="trend"></span><strong>Statistiques</strong><span>Mon activité mois par mois</span></button>
+  <button class="home-tile" onclick="showPage('physicalPage')"><span class="tile-icon" data-ic="scale"></span><strong>Suivi physique</strong><span>Mesures et évolution</span></button>
+ </div>
+ <h2>Prochaine compétition</h2><div id="homeCompetition"></div>
+ <button class="primary full" onclick="openForm()">+ Ajouter une séance</button>
+</section>
+
+<section id="favoritesPage" class="hidden">
+ <button class="back" onclick="showPage('home')">← Accueil</button><h2>Mes 3 sports favoris</h2>
+ <p class="small">Choisis jusqu’à trois disciplines. Elles seront accessibles directement depuis l’accueil et proposées en premier lors de l’ajout d’une séance.</p>
+ <label>Favori n°1</label><select id="fav1"></select>
+ <label>Favori n°2</label><select id="fav2"></select>
+ <label>Favori n°3</label><select id="fav3"></select>
+ <button class="primary full" onclick="saveFavorites()">Enregistrer mes favoris</button>
+</section>
+
+<section id="planning" class="hidden">
+ <button class="back" onclick="showPage('home')">← Accueil</button><p class="small">ORGANISATION SPORTIVE</p><h2>Mon planning</h2>
+ <div class="week-head"><button onclick="changeWeek(-1)">‹</button><b id="weekLabel">Semaine</b><button onclick="changeWeek(1)">›</button></div>
+ <div class="week" id="weekDays"></div>
+ <div class="agenda-title"><h2 id="dayTitle">Ma journée</h2><button class="primary" onclick="openForm()">+ Ajouter</button></div>
+ <div id="daySessions"></div>
+</section>
+
+<section id="formPage" class="hidden">
+ <button class="back" onclick="showPage('planning')">← Retour au planning</button><h2 id="formTitle">Nouvelle séance</h2>
+ <div class="card">
+  <label>Nom de la séance</label><input id="sName" placeholder="Ex : Fractionné 10 x 400 m">
+  <label>Discipline sportive</label><select id="sSport"></select>
+  <div id="favoriteSportChoices"></div>
+  <label class="checkline"><input type="checkbox" id="clubSession" onchange="toggleClubFields()"> Séance en club (contenu défini par le coach)</label>
+  <div id="detailFields">
+   <div class="section-label">DÉTAILS DE LA SÉANCE</div>
+   <label>Échauffement / préparation</label><textarea id="sWarmup" rows="2" placeholder="Ex : 15 min de footing + mobilité"></textarea>
+   <div class="form-row">
+    <div><label>Nombre de séries</label><input id="sSets" type="number" min="0" placeholder="Ex : 4"></div>
+    <div><label>Répétitions par série</label><input id="sReps" placeholder="Ex : 10 reps / 400 m"></div>
+   </div>
+   <div class="form-row">
+    <div><label>Temps d’effort</label><input id="sEffort" placeholder="Ex : 45 sec"></div>
+    <div><label>Temps de repos</label><input id="sRest" placeholder="Ex : 1 min 30"></div>
+   </div>
+   <label>Récupération entre les séries</label><input id="sSetRest" placeholder="Ex : 3 minutes">
+   <label>Contenu / consignes complémentaires</label><textarea id="sContent" rows="4" placeholder="Ex : Intensité, distances, charges, exercices, consignes techniques..."></textarea>
+  </div>
+  <div class="section-label">ORGANISATION</div>
+  <div class="form-row">
+   <div><label>Date</label><input type="date" id="sDate"></div>
+   <div><label>Heure</label><input type="time" id="sTime" value="18:00"></div>
+  </div>
+  <div class="form-row">
+   <div><label>Durée prévue (minutes)</label><input type="number" id="sDuration" placeholder="60" min="1"></div>
+   <div><label>Lieu de la séance</label><select id="sLocation">
+    <option>Salle de sport</option><option>Club</option><option>Plein air</option><option>Maison</option><option>Stade</option><option>Piste d’athlétisme</option><option>Gymnase</option><option>Piscine</option><option>Terrain extérieur</option><option>Parc / forêt</option><option>Montagne</option><option>Route</option><option>À distance / en ligne</option><option>Autre</option>
+   </select></div>
+  </div>
+  <button class="primary full" onclick="saveSession()">Enregistrer la séance</button><button class="secondary full" onclick="showPage('planning')">Annuler</button>
+ </div>
+</section>
+
+<section id="reviewPage" class="hidden">
+ <button class="back" onclick="showPage('planning')">← Retour au planning</button><h2>Bilan de séance</h2>
+ <div class="card"><p id="reviewName"></p>
+  <label>Ton ressenti (1 à 10)</label><input type="range" min="1" max="10" value="5" id="feeling"><div class="green" id="feelingValue">5 / 10</div>
+  <div class="form-row"><div><label>Durée réellement effectuée (minutes)</label><input type="number" id="actualDuration" min="0" placeholder="Durée réelle"></div><div><label>Distance réalisée (km, si applicable)</label><input type="number" id="actualDistance" min="0" step="0.01" placeholder="Ex : 5.2"></div></div>
+  <label>Commentaire (facultatif)</label><textarea id="reviewComment" rows="4" placeholder="Comment s’est passée ta séance ?"></textarea>
+  <button class="primary full" onclick="finishSession()">Valider : séance terminée</button><button class="secondary full" onclick="showPage('planning')">Annuler</button>
+ </div>
+</section>
+
+<section id="missedPage" class="hidden">
+ <button class="back" onclick="showPage('planning')">← Retour au planning</button><h2>Séance non réalisée</h2>
+ <div class="card"><p id="missedName"></p><label>Pourquoi n’as-tu pas réalisé cette séance ?</label>
+  <select id="missedReason"><option>Manque de temps</option><option>Fatigue / récupération</option><option>Blessure ou douleur</option><option>Maladie</option><option>Problème personnel</option><option>Annulation du club / coach</option><option>Météo / conditions extérieures</option><option>Autre</option></select>
+  <label>Précisions (facultatif)</label><textarea id="missedComment" rows="3" placeholder="Explique si tu le souhaites..."></textarea>
+  <button class="danger full" onclick="confirmMissed()">Confirmer : non réalisée</button>
+  <button class="secondary full" onclick="showPage('planning')">Annuler</button>
+ </div>
+</section>
+
+<section id="history" class="hidden"><button class="back" onclick="showPage('home')">← Accueil</button><h2>Historique</h2><div id="historyList"></div></section>
+
+<section id="competitions" class="hidden">
+ <button class="back" onclick="showPage('home')">← Accueil</button>
+ <div class="agenda-title"><h2>Mes compétitions</h2><button class="primary" onclick="openCompetitionForm()">+ Ajouter</button></div>
+ <p class="small">Note tes prochaines compétitions, leur lieu, leur date et leur horaire.</p><div id="competitionList"></div>
+</section>
+
+<section id="competitionForm" class="hidden">
+ <button class="back" onclick="showPage('competitions')">← Retour aux compétitions</button><h2 id="competitionFormTitle">Nouvelle compétition</h2>
+ <div class="card">
+  <label>Nom de la compétition</label><input id="cName" placeholder="Ex : Championnat régional">
+  <label>Sport</label><select id="cSport"></select>
+  <label>Date</label><input type="date" id="cDate">
+  <div class="form-row"><div><label>Heure</label><input type="time" id="cTime"></div><div><label>Heure de convocation (facultatif)</label><input type="time" id="cCallTime"></div></div>
+  <label>Lieu / adresse</label><input id="cPlace" placeholder="Ex : Palais des sports, Arras">
+  <label>Informations complémentaires</label><textarea id="cNotes" rows="3" placeholder="Catégorie, pesée, matériel, informations..."></textarea>
+  <button class="primary full" onclick="saveCompetition()">Enregistrer la compétition</button><button class="secondary full" onclick="showPage('competitions')">Annuler</button>
+ </div>
+</section>
+
+<section id="recordsPage" class="hidden">
+ <button class="back" onclick="showPage('home')">← Mon espace</button>
+ <div class="agenda-title"><h2>Records personnels</h2><button class="primary" onclick="openRecordForm()">+ Ajouter</button></div>
+ <p class="small">Ajoute toutes tes réussites : chrono, titre, classement, performance, diplôme sportif… Il n’y a pas de catégorie imposée.</p>
+ <div id="recordsList"></div>
+</section>
+<section id="recordFormPage" class="hidden">
+ <button class="back" onclick="showPage('recordsPage')">← Retour aux records</button><h2 id="recordFormTitle">Nouveau record / réussite</h2>
+ <div class="card">
+  <label>Record ou réussite</label><input id="rName" placeholder="Ex : Champion régional de boxe anglaise">
+  <label>Sport (facultatif)</label><select id="rSport"><option value="">Tous sports / non précisé</option></select>
+  <label>Lieu (facultatif)</label><input id="rPlace" placeholder="Ex : Salle, ville, club...">
+  <label>Date de réalisation</label><input type="date" id="rDate">
+  <label>Détails complémentaires (facultatif)</label><textarea id="rDetails" rows="3" placeholder="Ex : catégorie, temps, classement, adversaires..."></textarea>
+  <button class="primary full" onclick="saveRecord()">Enregistrer</button><button class="secondary full" onclick="showPage('recordsPage')">Annuler</button>
+ </div>
+</section>
+<section id="goalsPage" class="hidden">
+ <button class="back" onclick="showPage('home')">← Mon espace</button>
+ <div class="agenda-title"><h2>Mes objectifs</h2><button class="primary" onclick="openGoalForm()">+ Ajouter</button></div>
+ <div class="pill-row" id="goalFilters"><button class="active" onclick="filterGoals('all',this)">Tous</button><button onclick="filterGoals('court',this)">Court terme</button><button onclick="filterGoals('moyen',this)">Moyen terme</button><button onclick="filterGoals('long',this)">Long terme</button></div>
+ <div id="goalsList"></div>
+</section>
+<section id="goalFormPage" class="hidden">
+ <button class="back" onclick="showPage('goalsPage')">← Retour aux objectifs</button><h2 id="goalFormTitle">Nouvel objectif</h2>
+ <div class="card">
+  <label>Mon objectif</label><input id="gName" placeholder="Ex : Courir un 10 km en moins de 40 min">
+  <label>Horizon</label><select id="gTerm"><option value="court">Court terme</option><option value="moyen">Moyen terme</option><option value="long">Long terme</option></select>
+  <label>Sport (facultatif)</label><select id="gSport"><option value="">Tous sports / non précisé</option></select>
+  <label>Date cible (facultatif)</label><input type="date" id="gDate">
+  <label>Pourquoi / étapes / précisions (facultatif)</label><textarea id="gDetails" rows="3" placeholder="Comment comptes-tu atteindre cet objectif ?"></textarea>
+  <button class="primary full" onclick="saveGoal()">Enregistrer l’objectif</button><button class="secondary full" onclick="showPage('goalsPage')">Annuler</button>
+ </div>
+</section>
+<section id="statsPage" class="hidden">
+ <button class="back" onclick="showPage('home')">← Mon espace</button><h2>Statistiques</h2>
+ <p class="small">Bilan de tes séances terminées, sport par sport. Renseigne la durée et la distance dans le bilan de séance pour obtenir des chiffres plus précis.</p>
+ <label>Mois à consulter</label><input type="month" id="statsMonth" onchange="renderStats()">
+ <div id="statsSummary"></div><h3>Répartition par sport</h3><div id="statsBySport"></div>
+</section>
+<section id="physicalPage" class="hidden">
+ <button class="back" onclick="showPage('home')">← Mon espace</button>
+ <div class="agenda-title"><h2>Suivi physique</h2><button class="primary" onclick="openPhysicalForm()">+ Mesure</button></div>
+ <p class="small">Suis ton évolution au fil du temps. Tous les champs sont facultatifs sauf la date.</p>
+ <div id="physicalLatest"></div><h3>Historique des mesures</h3><div id="physicalHistory"></div>
+</section>
+<section id="physicalFormPage" class="hidden">
+ <button class="back" onclick="showPage('physicalPage')">← Retour au suivi</button><h2>Nouvelle mesure</h2>
+ <div class="card">
+  <label>Date</label><input type="date" id="pDate">
+  <div class="form-row"><div><label>Poids (kg)</label><input type="number" step="0.1" id="pWeight" placeholder="Ex : 58.5"></div><div><label>Taille (cm)</label><input type="number" step="0.1" id="pHeight" placeholder="Ex : 175"></div></div>
+  <div class="form-row"><div><label>Masse grasse (%)</label><input type="number" step="0.1" id="pFat" placeholder="Facultatif"></div><div><label>Tour de taille (cm)</label><input type="number" step="0.1" id="pWaist" placeholder="Facultatif"></div></div>
+  <div class="form-row"><div><label>Tour de poitrine (cm)</label><input type="number" step="0.1" id="pChest" placeholder="Facultatif"></div><div><label>Tour de bras (cm)</label><input type="number" step="0.1" id="pArm" placeholder="Facultatif"></div></div>
+  <label>Tour de cuisse (cm)</label><input type="number" step="0.1" id="pThigh" placeholder="Facultatif">
+  <label>Notes (facultatif)</label><textarea id="pNotes" rows="3" placeholder="Conditions de mesure, remarques..."></textarea>
+  <button class="primary full" onclick="savePhysical()">Enregistrer les mesures</button><button class="secondary full" onclick="showPage('physicalPage')">Annuler</button>
+ </div>
+</section>
+
+<section id="timerPage" class="hidden">
+ <button class="back" onclick="showPage('home')">← Accueil</button><h2>Chronomètre</h2>
+ <div class="timer-mode"><button id="stopwatchTab" class="active" onclick="setTimerMode('stopwatch')">Chronomètre</button><button id="intervalTab" onclick="setTimerMode('interval')">Intervalles</button></div>
+ <div id="stopwatchPanel" class="card"><div class="timer" id="clock">00:00:00</div><div class="actions"><button class="primary" onclick="startTimer()">Démarrer</button><button class="secondary" onclick="stopTimer()">Pause</button><button class="secondary" onclick="resetTimer()">Reset</button></div></div>
+ <div id="intervalPanel" class="hidden">
+  <div class="card">
+   <div class="section-label">CONFIGURATION DES INTERVALLES</div>
+   <div class="form-row"><div><label>Temps d’effort (secondes)</label><input type="number" id="iWork" min="1" value="30"></div><div><label>Temps de repos (secondes)</label><input type="number" id="iRest" min="0" value="30"></div></div>
+   <div class="form-row"><div><label>Répétitions par série</label><input type="number" id="iRounds" min="1" value="10"></div><div><label>Nombre de séries</label><input type="number" id="iSets" min="1" value="1"></div></div>
+   <label>Repos entre les séries (secondes)</label><input type="number" id="iSetRest" min="0" value="120">
+   <button class="secondary full" onclick="prepareIntervals()">Préparer la séance</button>
+  </div>
+  <div class="card"><div class="interval-phase" id="intervalPhase">Prêt à commencer</div><div class="interval-clock" id="intervalClock">00:30</div><div class="small" style="text-align:center" id="intervalProgress">Série 1 • Répétition 1</div><div class="actions" style="margin-top:15px"><button class="primary" onclick="startIntervals()">Démarrer</button><button class="secondary" onclick="pauseIntervals()">Pause</button><button class="secondary" onclick="resetIntervals()">Reset</button></div></div>
+ </div>
+</section>
+
+<section id="accountPage" class="hidden">
+ <button class="back" onclick="showPage('home')">← Accueil</button>
+ <p class="small">INFORMATIONS PERSONNELLES</p><h2>Mon compte</h2>
+ <div class="card">
+  <label>Nom / prénom</label><input id="accountName" autocomplete="name" placeholder="Ton nom">
+  <label>Adresse e-mail</label><input id="accountEmail" type="email" autocomplete="email" placeholder="tonadresse@email.com">
+  <label>Téléphone (facultatif)</label><input id="accountPhone" type="tel" autocomplete="tel" placeholder="Ton numéro de téléphone">
+  <label>Date de naissance (facultatif)</label><input id="accountBirth" type="date">
+  <button class="primary full" onclick="saveAccount()">Enregistrer mes informations</button>
+ </div>
+ <div class="card">
+  <h3>Sécurité du compte</h3>
+  <p class="small">Le mot de passe sera configuré lorsque de vrais comptes MyPerformance existeront avec un serveur sécurisé. Pour l’instant, cette version fonctionne sur ton appareil : aucun mot de passe n’est enregistré.</p>
+  <span class="status">Compte local • Connexion en ligne à venir</span>
+ </div>
+</section>
+</main>
+
+<script src="app.js"></script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){})})}
+</script>
+</body>
+</html>
